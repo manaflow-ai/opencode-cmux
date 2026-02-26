@@ -5,12 +5,18 @@
   "description": "OpenCode plugin that bridges OpenCode events to cmux notifications and sidebar metadata",
   "type": "module",
   "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target node",
+    "build": "tsc --emitDeclarationOnly && bun build src/index.ts --outdir dist --target node",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "bun run typecheck && bun run build"
   },
