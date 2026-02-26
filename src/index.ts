@@ -18,9 +18,10 @@ const plugin: Plugin = async ({ client, $ }) => {
 
   return {
     async event({ event }) {
+      const e = event as any
       // Handle session status changes (busy/idle/retry)
-      if (event.type === "session.status") {
-        const { sessionID, status } = event.properties
+      if (e.type === "session.status") {
+        const { sessionID, status } = e.properties
 
         if (status.type === "busy") {
           await setStatus($, "opencode", "working", {
@@ -51,8 +52,8 @@ const plugin: Plugin = async ({ client, $ }) => {
       }
 
       // Handle session errors
-      if (event.type === "session.error") {
-        const sessionID = event.properties.sessionID
+      if (e.type === "session.error") {
+        const sessionID = e.properties.sessionID
         const title = sessionID
           ? (await fetchSession(sessionID))?.title ?? sessionID
           : "unknown session"
@@ -63,6 +64,24 @@ const plugin: Plugin = async ({ client, $ }) => {
           source: "opencode",
         })
         await clearStatus($, "opencode")
+        return
+      }
+
+      // Handle question events (question.* types not yet in published plugin SDK)
+      if (e.type === "question.asked") {
+        const header = e.properties.questions[0]?.header ?? "Question"
+        await setStatus($, "opencode", "question", {
+          icon: "help-circle",
+          color: "#a855f7",
+        })
+        await notify($, { title: "Has a question", subtitle: header })
+        await log($, `Question: ${header}`, { level: "info", source: "opencode" })
+        return
+      }
+
+      if (e.type === "question.replied" || e.type === "question.rejected") {
+        await clearStatus($, "opencode")
+        return
       }
     },
 
@@ -73,17 +92,6 @@ const plugin: Plugin = async ({ client, $ }) => {
         color: "#ef4444",
       })
       // Return undefined — do not block the permission
-    },
-
-    async "tool.execute.before"(input) {
-      if (input.tool === "ask") {
-        await notify($, { title: "Has a question" })
-        await setStatus($, "opencode", "question", {
-          icon: "help-circle",
-          color: "#a855f7",
-        })
-      }
-      // Return undefined — do not block the tool
     },
   }
 }
