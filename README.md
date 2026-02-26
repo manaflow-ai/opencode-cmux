@@ -1,5 +1,7 @@
 # opencode-cmux
 
+[![npm](https://img.shields.io/npm/v/opencode-cmux)](https://www.npmjs.com/package/opencode-cmux)
+
 OpenCode plugin that bridges OpenCode events to cmux notifications and sidebar metadata.
 
 ## Requirements
@@ -10,19 +12,15 @@ OpenCode plugin that bridges OpenCode events to cmux notifications and sidebar m
 
 ## Installation
 
-### npm (recommended)
-
-Install the package and add it to `~/.config/opencode/opencode.json`:
-
-```bash
-npm install -g opencode-cmux
-```
+Add to `~/.config/opencode/opencode.json`:
 
 ```json
 {
   "plugin": ["opencode-cmux"]
 }
 ```
+
+OpenCode will download the package automatically on next start.
 
 ### Local / development
 
@@ -31,6 +29,8 @@ Build the package, then symlink the output directly into OpenCode's plugin direc
 ```bash
 ln -sf ~/path/to/opencode-cmux/dist/index.js ~/.config/opencode/plugins/cmux.js
 ```
+
+Make sure `opencode-cmux` is **not** listed in `opencode.json` when using the symlink, to avoid loading it twice.
 
 ## What it does
 

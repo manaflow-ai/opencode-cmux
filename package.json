@@ -27,6 +27,14 @@
   ],
   "author": "Matteo Casonato",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xCaso/opencode-cmux.git"
+  },
+  "homepage": "https://github.com/0xCaso/opencode-cmux#readme",
+  "bugs": {
+    "url": "https://github.com/0xCaso/opencode-cmux/issues"
+  },
   "peerDependencies": {
     "@opencode-ai/plugin": ">=1.0.0"
   },
