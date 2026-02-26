@@ -1,6 +1,8 @@
 import type { Plugin } from "@opencode-ai/plugin"
 import { notify, setStatus, clearStatus, log } from "./cmux.js"
 
+const TAG = "[opencode-cmux]"
+
 const plugin: Plugin = async ({ client, $ }) => {
   async function fetchSession(
     sessionID: string,
@@ -11,7 +13,8 @@ const plugin: Plugin = async ({ client, $ }) => {
         return { title: result.data.title, parentID: result.data.parentID }
       }
       return null
-    } catch {
+    } catch (e) {
+      console.error(TAG, "fetchSession failed:", e)
       return null
     }
   }
@@ -36,17 +39,18 @@ const plugin: Plugin = async ({ client, $ }) => {
           const title = session?.title ?? sessionID
 
           if (!session?.parentID) {
-            // Primary session
+            // Primary session — notify + log + clear
             await notify($, { title: `Done: ${title}` })
             await log($, `Done: ${title}`, { level: "success", source: "opencode" })
-            await clearStatus($, "opencode")
           } else {
-            // Subagent session — log only, no notify/clearStatus to avoid spam
+            // Subagent session — log only (no notification spam)
             await log($, `Subagent finished: ${title}`, {
               level: "info",
               source: "opencode",
             })
           }
+          // Always clear status on idle, regardless of primary/subagent
+          await clearStatus($, "opencode")
           return
         }
       }
@@ -67,7 +71,7 @@ const plugin: Plugin = async ({ client, $ }) => {
         return
       }
 
-      // Handle question events (question.* types not yet in published plugin SDK)
+      // Handle question events
       if (e.type === "question.asked") {
         const header = e.properties.questions[0]?.header ?? "Question"
         await setStatus($, "opencode", "question", {
@@ -93,6 +97,7 @@ const plugin: Plugin = async ({ client, $ }) => {
       })
       // Return undefined — do not block the permission
     },
+
   }
 }
 

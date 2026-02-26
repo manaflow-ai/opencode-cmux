@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "opencode-cmux",
-  "version": "0.1.2",
+  "name": "@manaflow-ai/opencode-cmux",
+  "version": "0.2.0",
   "description": "OpenCode plugin that bridges OpenCode events to cmux notifications and sidebar metadata",
   "type": "module",
   "main": "dist/index.js",
@@ -29,11 +29,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0xCaso/opencode-cmux.git"
+    "url": "git+https://github.com/manaflow-ai/opencode-cmux.git"
   },
-  "homepage": "https://github.com/0xCaso/opencode-cmux#readme",
+  "homepage": "https://github.com/manaflow-ai/opencode-cmux#readme",
   "bugs": {
-    "url": "https://github.com/0xCaso/opencode-cmux/issues"
+    "url": "https://github.com/manaflow-ai/opencode-cmux/issues"
   },
   "peerDependencies": {
     "@opencode-ai/plugin": ">=1.0.0"
