@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "opencode-cmux",
+  "version": "0.1.0",
+  "description": "OpenCode plugin that bridges OpenCode events to cmux notifications and sidebar metadata",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run typecheck && bun run build"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "cmux"
+  ],
+  "author": "Matteo Casonato",
+  "license": "MIT",
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.2.15",
+    "@types/node": "^25.3.1",
+    "typescript": "^5.9.3"
+  }
+}
