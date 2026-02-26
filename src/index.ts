@@ -67,12 +67,7 @@ const plugin: Plugin = async ({ client, $ }) => {
     },
 
     async "permission.ask"(input) {
-      const title =
-        "title" in input && typeof input.title === "string"
-          ? input.title
-          : "Needs your permission"
-
-      await notify($, { title: "Needs your permission", subtitle: title })
+      await notify($, { title: "Needs your permission", subtitle: input.title })
       await setStatus($, "opencode", "waiting", {
         icon: "lock",
         color: "#ef4444",
