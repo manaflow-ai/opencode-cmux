@@ -29,7 +29,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xCaso/opencode-cmux.git"
+    "url": "git+https://github.com/0xCaso/opencode-cmux.git"
   },
   "homepage": "https://github.com/0xCaso/opencode-cmux#readme",
   "bugs": {
