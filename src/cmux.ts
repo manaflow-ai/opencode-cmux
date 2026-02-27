@@ -2,8 +2,26 @@ import { existsSync } from "node:fs"
 import type { PluginInput } from "@opencode-ai/plugin"
 
 type Shell = PluginInput["$"]
+type Client = PluginInput["client"]
 
-const TAG = "[opencode-cmux]"
+let _client: Client | null = null
+
+export function initClient(client: Client) {
+  _client = client
+}
+
+async function logError(message: string, extra?: unknown) {
+  if (_client) {
+    await _client.app.log({
+      body: {
+        service: "opencode-cmux",
+        level: "error",
+        message,
+        extra: extra != null ? { detail: String(extra) } : undefined,
+      },
+    }).catch(() => {})
+  }
+}
 
 export function isInCmux(): boolean {
   return (
@@ -17,7 +35,7 @@ async function run($: Shell, args: TemplateStringsArray, ...values: any[]) {
   if (result.exitCode !== 0) {
     const stderr = result.stderr?.toString().trim()
     if (stderr) {
-      console.error(TAG, `cmux exited ${result.exitCode}:`, stderr)
+      await logError(`cmux exited ${result.exitCode}: ${stderr}`)
     }
   }
   return result
@@ -34,7 +52,7 @@ export async function notify(
   try {
     await $`cmux notify ${args}`.nothrow()
   } catch (e) {
-    console.error(TAG, "notify failed:", e)
+    await logError("notify failed", e)
   }
 }
 
@@ -52,7 +70,7 @@ export async function setStatus(
   try {
     await $`cmux set-status ${args}`.nothrow()
   } catch (e) {
-    console.error(TAG, "set-status failed:", e)
+    await logError("set-status failed", e)
   }
 }
 
@@ -61,7 +79,7 @@ export async function clearStatus($: Shell, key: string): Promise<void> {
   try {
     await $`cmux clear-status ${key}`.nothrow()
   } catch (e) {
-    console.error(TAG, "clear-status failed:", e)
+    await logError("clear-status failed", e)
   }
 }
 
@@ -82,6 +100,6 @@ export async function log(
   try {
     await $`cmux log ${args}`.nothrow()
   } catch (e) {
-    console.error(TAG, "log failed:", e)
+    await logError("log failed", e)
   }
 }

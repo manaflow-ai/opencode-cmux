@@ -1,9 +1,8 @@
 import type { Plugin } from "@opencode-ai/plugin"
-import { notify, setStatus, clearStatus, log } from "./cmux.js"
-
-const TAG = "[opencode-cmux]"
+import { notify, setStatus, clearStatus, log, initClient } from "./cmux.js"
 
 const plugin: Plugin = async ({ client, $ }) => {
+  initClient(client)
   async function fetchSession(
     sessionID: string,
   ): Promise<{ title: string; parentID?: string } | null> {
@@ -14,7 +13,9 @@ const plugin: Plugin = async ({ client, $ }) => {
       }
       return null
     } catch (e) {
-      console.error(TAG, "fetchSession failed:", e)
+      await client.app.log({
+        body: { service: "opencode-cmux", level: "error", message: "fetchSession failed", extra: { detail: String(e) } },
+      }).catch(() => {})
       return null
     }
   }
